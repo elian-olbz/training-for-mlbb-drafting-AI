@@ -29,9 +29,9 @@ def run_human_vs_human(draft_state):
 
     print_final_draft(draft_state)
 
-def run_human_vs_ai(draft_state, model_path):
+def run_human_vs_ai(draft_state, model_path, team_hero_pool, enemy_hero_pool):
     blue_player = HumanPlayer("Blue")
-    red_player = AIPlayer("Red", model_path)
+    red_player = AIPlayer("Red", model_path, team_hero_pool, enemy_hero_pool)
 
     for i in range(20):
         if i in blue_turn:
@@ -50,8 +50,8 @@ def run_human_vs_ai(draft_state, model_path):
     print_final_draft(draft_state)
 
 
-def run_ai_vs_human(draft_state, model_path):
-    blue_player = AIPlayer("Blue", model_path)
+def run_ai_vs_human(draft_state, model_path, team_hero_pool, enemy_hero_pool):
+    blue_player = AIPlayer("Blue", model_path, team_hero_pool, enemy_hero_pool)
     red_player = HumanPlayer("Red")
 
     for i in range(20):
@@ -71,9 +71,9 @@ def run_ai_vs_human(draft_state, model_path):
     print_final_draft(draft_state)
 
 
-def run_ai_vs_ai(draft_state, model_path1, model_path2):
-    blue_player = AIPlayer("Blue", model_path1)
-    red_player = AIPlayer("Red", model_path2)
+def run_ai_vs_ai(draft_state, model_path1, model_path2, team_hero_pool, enemy_hero_pool):
+    blue_player = AIPlayer("Blue", model_path1, team_hero_pool, enemy_hero_pool)
+    red_player = AIPlayer("Red", model_path2, enemy_hero_pool, team_hero_pool)
 
     # Create locks for synchronization
     blue_lock = threading.Lock()

@@ -3,7 +3,7 @@ import csv
 #Used to split red and blue side moves for easy verification of bans and picks of both sides
 
 # Read the dataset from the CSV file
-filename = 'C:/Users/Marlon/Desktop/dataset/data/blck_s11.csv'
+filename = 'D:/python_projects/ai/ai_draft_sim/data/blck_s11.csv'
 
 blue_turn = [0, 2, 4, 6, 9, 10, 13, 15, 17, 18]
 red_turn = [1, 3, 5, 7, 8, 11, 12, 14, 16, 19]
@@ -27,7 +27,7 @@ with open(filename, 'r') as file:
         red_pick.append([data[i] for i in pick_indices if i in red_turn][:5])
 
 # Save to a new CSV file
-new_filename = 'C:/Users/Marlon/Desktop/dataset/exp_data/verif_blck_s11.csv'
+new_filename = 'D:/python_projects/ai/ai_draft_sim/exp_data/verif_blck_s11.csv'
 
 with open(new_filename, 'w', newline='') as file:
     writer = csv.writer(file)

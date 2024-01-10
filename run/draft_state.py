@@ -67,11 +67,11 @@ class DraftState:
                 return hero_role[1]
         return None
 
-    def filter_predictions(self, valid_heroes, valid_predictions, team_pick_roles, enemy_pick_roles, is_picking):
+    def filter_predictions(self, valid_heroes, valid_predictions, team_pick_roles, enemy_pick_roles, team_hero_pool, enemy_hero_pool, is_picking):
         if is_picking:
             valid_predictions_filtered = []
             for hero_id, prediction in zip(valid_heroes, valid_predictions):
-                if self.filter_pick_roles(hero_id, team_pick_roles) is not None:
+                if self.filter_pick_roles(hero_id, team_pick_roles) is not None and hero_id in team_hero_pool:
                     valid_predictions_filtered.append(prediction)
 
             if not valid_predictions_filtered:
@@ -90,7 +90,7 @@ class DraftState:
         else:
             valid_predictions_filtered = []
             for hero_id, prediction in zip(valid_heroes, valid_predictions):
-                if self.filter_pick_roles(hero_id, enemy_pick_roles)  is not None:
+                if self.filter_pick_roles(hero_id, enemy_pick_roles)  is not None and hero_id in enemy_hero_pool:
                         valid_predictions_filtered.append(prediction)
 
             if not valid_predictions_filtered:
@@ -98,7 +98,7 @@ class DraftState:
                 print("Random selection:", next_hero_id)
             else:
                 # Obtain the indices of the top predictions
-                top_prediction_indices = np.argsort(valid_predictions_filtered)[-3:]
+                top_prediction_indices = np.argsort(valid_predictions_filtered)[-2:]
                 # Select a random prediction among the top predictions
                 random_prediction_idx = random.choice(top_prediction_indices)
 
@@ -108,7 +108,7 @@ class DraftState:
 
         return next_hero_id
 
-    def generate_draft_sequence(self, padded_sequence, team_color, is_picking):
+    def generate_draft_sequence(self, padded_sequence, team_color, team_hero_pool, enemy_hero_pool,is_picking):
         time.sleep(1)  # Delay for x seconds
         
         input_data = np.array(padded_sequence, dtype=np.float32)
@@ -134,8 +134,8 @@ class DraftState:
             print("Random selection:", next_hero_id)
         else:
             if team_color == 'Blue':
-                next_hero_id = self.filter_predictions(valid_heroes, valid_predictions, self.blue_pick_roles, self.red_pick_roles, is_picking)
+                next_hero_id = self.filter_predictions(valid_heroes, valid_predictions, self.blue_pick_roles, self.red_pick_roles, team_hero_pool, enemy_hero_pool, is_picking)
             elif team_color == 'Red':
-                next_hero_id = self.filter_predictions(valid_heroes, valid_predictions, self.red_pick_roles, self.blue_pick_roles, is_picking)
+                next_hero_id = self.filter_predictions(valid_heroes, valid_predictions, self.red_pick_roles, self.blue_pick_roles, team_hero_pool, enemy_hero_pool, is_picking)
 
         return next_hero_id

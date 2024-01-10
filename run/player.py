@@ -31,15 +31,17 @@ class HumanPlayer:
 
 
 class AIPlayer:
-    def __init__(self, team_color, model_path):
+    def __init__(self, team_color, model_path, team_hero_pool, enemy_hero_pool):
         self.team_color = team_color
+        self.team_hero_pool = team_hero_pool
+        self.enemy_hero_pool = enemy_hero_pool
         self.interpreter = tf.lite.Interpreter(model_path=model_path)
         self.interpreter.allocate_tensors()
 
     def pick(self, draft_state):
         while True:
             padded_sequence = pad_sequences([draft_state.draft_sequence], maxlen=max_sequence_length, padding='post')
-            next_hero_id = draft_state.generate_draft_sequence(padded_sequence, self.team_color, True)
+            next_hero_id = draft_state.generate_draft_sequence(padded_sequence, self.team_color, self.team_hero_pool, self.enemy_hero_pool, True)
             if next_hero_id not in draft_state.draft_sequence:
                 break
         draft_state.draft_sequence.append(next_hero_id)
@@ -50,7 +52,7 @@ class AIPlayer:
     def ban(self, draft_state):
         while True:
             padded_sequence = pad_sequences([draft_state.draft_sequence], maxlen=max_sequence_length, padding='post')
-            next_ban_id = draft_state.generate_draft_sequence(padded_sequence, self.team_color, False)
+            next_ban_id = draft_state.generate_draft_sequence(padded_sequence, self.team_color, self.team_hero_pool, self.enemy_hero_pool, False)
             if next_ban_id not in draft_state.draft_sequence:
                 break
         draft_state.draft_sequence.append(next_ban_id)
